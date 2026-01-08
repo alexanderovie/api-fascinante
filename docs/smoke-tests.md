@@ -18,12 +18,20 @@ Este repositorio incluye el script `scripts/smoke-tests.sh` que ejecuta una seri
 BASE_URL=http://localhost:8080 ENABLE_AUTH=false ./scripts/smoke-tests.sh
 ```
 
-4. Si quieres activar los pasos autenticados:
+4. Para correr los mismos pasos contra Cloud Run (en lugar del entorno local) usarás la URL pública y, cuando habilites Auth0, un token válido:
 
 ```bash
-ENABLE_AUTH=true AUTH_TOKEN=<token_valido> ./scripts/smoke-tests.sh
+BASE_URL=https://fascinante-api-dev-1001584773312.us-central1.run.app \
+  ENABLE_AUTH=true \
+  AUTH_TOKEN=<token_valido> \
+  ./scripts/smoke-tests.sh
 ```
 
-5. Ajusta `REPEAT_REQUESTS` si deseas más iteraciones sobre `/v1/me`.
+5. El script acepta otras variables opcionales:
+   - `TIMEOUT` (segundos) para ajustar `curl`
+   - `REPEAT_REQUESTS` para repetir la consulta autenticada
+   - `PROJECT` o `LIMIT` no aplican aquí, son para `build-logs.sh`
 
-El script aborta en cualquier fallo y deja un mensaje explicando qué prueba falló; así puedes enlazarlo fácilmente en un pipeline de CI como *smoke test* básico antes de un despliegue.
+6. Ajusta `ENABLE_AUTH=false` y quita `AUTH_TOKEN` si solo querés probar la ruta con el feature flag apagado.
+
+7. El script aborta en cualquier fallo y deja un mensaje explicando qué prueba falló; así puedes enlazarlo fácilmente en un pipeline de CI como *smoke test* básico antes de un despliegue.

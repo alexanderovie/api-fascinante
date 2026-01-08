@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
 const env_1 = require("./config/env");
 const auth0Plugin_1 = __importDefault(require("./plugins/auth/auth0Plugin"));
-const private_1 = __importDefault(require("./routes/private"));
-const tenantPlugin_1 = __importDefault(require("./plugins/tenant/tenantPlugin"));
 const postgresPlugin_1 = __importDefault(require("./plugins/database/postgresPlugin"));
+const tenantPlugin_1 = __importDefault(require("./plugins/tenant/tenantPlugin"));
+const private_1 = __importDefault(require("./routes/private"));
 const public_1 = __importDefault(require("./routes/public"));
 const fastify = (0, fastify_1.default)({ logger: true });
 const start = async () => {
