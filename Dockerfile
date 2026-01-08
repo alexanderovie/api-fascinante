@@ -8,7 +8,7 @@ RUN corepack enable && corepack prepare pnpm@10.19.0 --activate
 FROM base AS dependencies
 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile --include=dev
+RUN pnpm install --config.frozen-lockfile=true --include=dev
 
 FROM base AS builder
 
