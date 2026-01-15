@@ -29,16 +29,18 @@ const requireAuthorizationHeader = (
       .code(401)
       .send({ message: 'Unauthorized: missing access token', statusCode: 401 });
   }
+
+  return reply;
 };
 
 export default async function registerPrivateRoutes(fastify: FastifyInstance) {
-  const preHandler = appConfig.enableAuth
-    ? [requireAuthorizationHeader, fastify.requireAuth()]
-    : undefined;
+  const onRequest = appConfig.enableAuth ? requireAuthorizationHeader : undefined;
+  const preHandler = appConfig.enableAuth ? fastify.requireAuth() : undefined;
 
   fastify.get(
     '/v1/me',
     {
+      onRequest,
       preHandler,
       schema: {
         response: {
