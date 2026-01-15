@@ -20,6 +20,9 @@ importers:
       '@sinclair/typebox':
         specifier: ^0.34.14
         version: 0.34.47
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
       dotenv:
         specifier: ^16.4.5
         version: 16.6.1
