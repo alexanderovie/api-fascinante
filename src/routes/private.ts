@@ -1,4 +1,5 @@
 import { FastifyInstance } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { Type } from '@sinclair/typebox';
 import { appConfig } from '../config/env';
 
@@ -19,8 +20,21 @@ const MeResponseSchema = Type.Object({
   }),
 });
 
+const requireAuthorizationHeader = (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  if (!request.headers.authorization) {
+    return reply
+      .code(401)
+      .send({ message: 'Unauthorized: missing access token', statusCode: 401 });
+  }
+};
+
 export default async function registerPrivateRoutes(fastify: FastifyInstance) {
-  const preHandler = appConfig.enableAuth ? fastify.requireAuth() : undefined;
+  const preHandler = appConfig.enableAuth
+    ? [requireAuthorizationHeader, fastify.requireAuth()]
+    : undefined;
 
   fastify.get(
     '/v1/me',
