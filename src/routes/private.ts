@@ -1,15 +1,46 @@
 import { FastifyInstance } from 'fastify';
+import { Type } from '@sinclair/typebox';
 import { appConfig } from '../config/env';
+
+const ErrorResponseSchema = Type.Object({
+  message: Type.String(),
+  statusCode: Type.Number(),
+});
+
+const MeResponseSchema = Type.Object({
+  userId: Type.String(),
+  email: Type.Union([Type.String(), Type.Null()]),
+  roles: Type.Array(Type.String()),
+  tenant: Type.Object({
+    organizationId: Type.String(),
+    organizationType: Type.Union([Type.Literal('agency'), Type.Literal('business')]),
+    parentOrganizationId: Type.Union([Type.String(), Type.Null()]),
+    membershipIds: Type.Array(Type.String()),
+  }),
+});
 
 export default async function registerPrivateRoutes(fastify: FastifyInstance) {
   const preHandler = appConfig.enableAuth ? fastify.requireAuth() : undefined;
 
   fastify.get(
     '/v1/me',
-    { preHandler },
+    {
+      preHandler,
+      schema: {
+        response: {
+          200: MeResponseSchema,
+          401: ErrorResponseSchema,
+          403: ErrorResponseSchema,
+          500: ErrorResponseSchema,
+          503: ErrorResponseSchema,
+        },
+      },
+    },
     async (request, reply) => {
       if (!appConfig.enableAuth) {
-        return { message: 'auth disabled' };
+        return reply
+          .code(503)
+          .send({ message: 'Authentication disabled', statusCode: 503 });
       }
 
       const auth = request.auth;
