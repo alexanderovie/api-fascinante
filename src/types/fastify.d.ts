@@ -1,5 +1,5 @@
 import 'fastify';
-import { preHandlerHookHandler } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthContext } from './auth';
 import { TenantContext } from './tenant';
 
@@ -15,6 +15,6 @@ declare module 'fastify' {
       forbidden(message: string): Error;
       internalServerError(message: string): Error;
     };
-    requireAuth(): preHandlerHookHandler;
+    requireAuth(): (request: FastifyRequest, reply: FastifyReply) => Promise<void> | void;
   }
 }
