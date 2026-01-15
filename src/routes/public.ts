@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import { Type } from '@sinclair/typebox';
 
 const HealthResponseSchema = Type.Object({
-  status: Type.Literal('ok'),
+  status: Type.Literal('Ok fue un exito'),
 });
 
 export default async function registerPublicRoutes(fastify: FastifyInstance) {
@@ -16,7 +16,7 @@ export default async function registerPublicRoutes(fastify: FastifyInstance) {
       },
     },
     async (_request, reply) => {
-      return reply.send({ status: 'ok' });
+      return reply.send({ status: 'Ok fue un exito' });
     }
   );
 }
